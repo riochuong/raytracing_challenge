@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.14.3)
 project(raytracer_challenge_test)
 
 find_package(xtensor REQUIRED)
+
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 set(CMAKE_REQUIRED_FLAGS -Wall)                   
