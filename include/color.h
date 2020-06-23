@@ -11,7 +11,7 @@ namespace raytracer_challenge {
 
         Color(): R(0), G(0), B(0) {};
 
-        Color &operator+(const Color &rhs) {
+        Color operator+(const Color &rhs) {
             Color new_color;
             new_color.R = this->R + rhs.R;
             new_color.G = this->G + rhs.G;
@@ -19,7 +19,7 @@ namespace raytracer_challenge {
             return new_color;
         }
 
-        Color &operator-(const Color &rhs) {
+        Color operator-(const Color &rhs) {
             Color new_color;
             new_color.R = this->R - rhs.R;
             new_color.G = this->G - rhs.G;
@@ -27,7 +27,7 @@ namespace raytracer_challenge {
             return new_color;
         }
 
-        Color &operator*(const Color &rhs) {
+        Color operator*(const Color &rhs) {
             Color new_color;
             new_color.R = this->R * rhs.R;
             new_color.G = this->G * rhs.G;
@@ -35,7 +35,7 @@ namespace raytracer_challenge {
             return new_color;
         }
 
-        Color &operator*(float scalar) {
+        Color operator*(float scalar) {
             Color new_color;
             new_color.R = this->R * scalar;
             new_color.G = this->G * scalar;
