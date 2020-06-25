@@ -1,4 +1,5 @@
 // Main entry for start running all tests
+#pragma once
 
 namespace raytracer_challenge {
     class Color {
@@ -41,6 +42,13 @@ namespace raytracer_challenge {
             new_color.G = this->G * scalar;
             new_color.B = this->B * scalar;
             return new_color;
+        }
+
+        Color &operator=(const Color &rhs) {
+            this->R = rhs.R;
+            this->G = rhs.G;
+            this->B = rhs.B;
+            return *this;
         }
 
     };

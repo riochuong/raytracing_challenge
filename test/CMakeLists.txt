@@ -14,7 +14,8 @@ target_include_directories(Catch2
 )
 
 set (UNIT_TEST_FILES 
-    ${CMAKE_SOURCE_DIR}/test/TestColorData.cpp
+    ${CMAKE_SOURCE_DIR}/test/TestColorData.cpp 
+    ${CMAKE_SOURCE_DIR}/test/TestCanvas.cpp
 )
 
 set (TARGET_NAME unit_tests)
@@ -24,7 +25,7 @@ add_executable(${TARGET_NAME}
 )
 message("UNIT TEST FILES ${UNIT_TEST_FILES}")
 
-target_link_libraries(${TARGET_NAME} Catch2)
+target_link_libraries(${TARGET_NAME} Catch2 raytracer)
 
 
 
