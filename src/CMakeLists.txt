@@ -5,6 +5,5 @@ set (TARGET raytracer)
 
 add_library(${TARGET} 
     SHARED
-    color.cpp
     canvas.cpp
 )
