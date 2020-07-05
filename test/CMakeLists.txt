@@ -16,6 +16,7 @@ target_include_directories(Catch2
 set (UNIT_TEST_FILES 
     ${CMAKE_SOURCE_DIR}/test/TestColorData.cpp 
     ${CMAKE_SOURCE_DIR}/test/TestCanvas.cpp
+    ${CMAKE_SOURCE_DIR}/test/TestMatrices.cpp
 )
 
 set (TARGET_NAME unit_tests)
