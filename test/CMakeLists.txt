@@ -5,7 +5,8 @@ find_package(xtensor REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-set(CMAKE_REQUIRED_FLAGS -Wall)                   
+set(CMAKE_REQUIRED_FLAGS -Wall)       
+set(CMAKE_LINK    "-lgcov")            
 
 add_library(Catch2 INTERFACE)
 
@@ -26,7 +27,7 @@ add_executable(${TARGET_NAME}
 )
 message("UNIT TEST FILES ${UNIT_TEST_FILES}")
 
-target_link_libraries(${TARGET_NAME} Catch2 raytracer)
+target_link_libraries(${TARGET_NAME} Catch2 raytracer lapack blas)
 
 
 
