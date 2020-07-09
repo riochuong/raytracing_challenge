@@ -6,4 +6,6 @@ set (TARGET raytracer)
 add_library(${TARGET} 
     SHARED
     canvas.cpp
+    matrix_transforms.cpp
+    raytracing_helpers.cpp
 )

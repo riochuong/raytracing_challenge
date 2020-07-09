@@ -18,6 +18,7 @@ set (UNIT_TEST_FILES
     ${CMAKE_SOURCE_DIR}/test/TestColorData.cpp 
     ${CMAKE_SOURCE_DIR}/test/TestCanvas.cpp
     ${CMAKE_SOURCE_DIR}/test/TestMatrices.cpp
+    ${CMAKE_SOURCE_DIR}/test/TestRay.cpp
 )
 
 set (TARGET_NAME unit_tests)

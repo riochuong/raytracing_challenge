@@ -2,10 +2,15 @@
 #include <xtensor/xarray.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xio.hpp>
+#include <xtensor/xmath.hpp>
 #include "catch.hpp"
-#include "matrix_utils.h"
+#include "matrix_transforms.h"
+#include "data_types.h"
 
 using namespace xt;
+using namespace raytracer_challenge;
+
+typedef xt::numeric_constants<double> numeric;
 
 TEST_CASE("Multiply Matrices") {
     xarray<int> mat1 = {
@@ -58,7 +63,7 @@ TEST_CASE("Test Matrix Invertibility") {
         {4.,-9.,3.,-7.},
         {9,1.,7.,-6.}
     };
-    REQUIRE(isMatrixInvertible(A));
+    REQUIRE(tf::isMatrixInvertible(A));
 
     A = {
         {-4, 2, -2, 3},
@@ -66,7 +71,7 @@ TEST_CASE("Test Matrix Invertibility") {
         {0, -5, 1, -5},
         {0, 0, 0, 0}
     };
-    REQUIRE(!isMatrixInvertible(A));
+    REQUIRE(!tf::isMatrixInvertible(A));
 }
 
 TEST_CASE("Invert a matrix ") {
@@ -99,4 +104,62 @@ TEST_CASE("Invert a matrix ") {
     std::cout << "B : " << B << "\n";
     std::cout << "Like B: " << like_B << "\n";
     REQUIRE(xt::allclose(B, like_B, 1e-04));
+}
+
+TEST_CASE("Point Transformation") {
+    xarray<double> point = {
+        {-3, 4, 5, 1}
+    };
+    point.reshape({4, 1});
+    auto tmat = tf::translation(5, -3, 2);
+    auto result = linalg::dot(tmat, point);
+    xarray<double> expected = {
+        {2, 1, 7, 1}
+    };
+    expected.reshape({4, 1});
+    std::cout << "Point transformed: " << result << "\n";
+    std::cout << "Point expecteed:" << expected << "\n";
+    REQUIRE(xt::allclose(expected, result));
+
+}
+
+TEST_CASE("Vector Transformation") {
+    Vect vect (-3., 4., 5.);
+    auto tmat = tf::translation(5, -3, 2);
+    auto result = linalg::dot(tmat, vect.get_mat_data());
+    xarray<double> expected = {
+        {-3, 4, 5, 0}
+    };
+    expected.reshape({4, 1});
+    std::cout << "Vector transformed: " << result << "\n";
+    std::cout << "Vector expecteed:" << expected << "\n";
+    REQUIRE(xt::allclose(expected, result));
+
+}
+
+TEST_CASE("Individual Transformations and Chained ") {
+    Point p (1, 0, 1);
+    p.apply_transform(tf::rotation_x(numeric::PI_2));
+    Point expected_point(1, -1, 0);
+    REQUIRE(xt::allclose(expected_point.get_mat_data(), p.get_mat_data()));
+    
+    p.apply_transform(tf::scaling(5, 5, 5));
+    expected_point = Point(5, -5, 0);
+    std::cout << "p " << p.x << ' ' << p.y << ' ' << p.z << "\n";
+    REQUIRE(xt::allclose(expected_point.get_mat_data(), p.get_mat_data()));
+    
+    p.apply_transform(tf::translation(10, 5, 7)); 
+    expected_point = Point(15, 0, 7);
+    REQUIRE(xt::allclose(expected_point.get_mat_data(), p.get_mat_data()));
+
+    Point p_chain (1, 0 ,1);
+    auto transforms = tf::chain_transforms(tf::translation(10, 5, 7), 
+                                       tf::scaling(5, 5, 5),
+                                       tf::rotation_x(numeric::PI_2));
+    p_chain.apply_transform(transforms);
+    REQUIRE(xt::allclose(p_chain.get_mat_data(), p.get_mat_data()));
+
+    // chain transforms
+
+
 }
