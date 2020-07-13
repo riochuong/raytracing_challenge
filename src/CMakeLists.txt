@@ -8,4 +8,5 @@ add_library(${TARGET}
     canvas.cpp
     matrix_transforms.cpp
     raytracing_helpers.cpp
+    data_types.cpp
 )

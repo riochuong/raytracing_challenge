@@ -126,7 +126,7 @@ TEST_CASE("Point Transformation") {
 TEST_CASE("Vector Transformation") {
     Vect vect (-3., 4., 5.);
     auto tmat = tf::translation(5, -3, 2);
-    auto result = linalg::dot(tmat, vect.get_mat_data());
+    auto result = linalg::dot(tmat, vect.get_mat_homo_data());
     xarray<double> expected = {
         {-3, 4, 5, 0}
     };
