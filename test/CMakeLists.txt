@@ -20,6 +20,8 @@ set (UNIT_TEST_FILES
     ${CMAKE_SOURCE_DIR}/test/TestMatrices.cpp
     ${CMAKE_SOURCE_DIR}/test/TestRay.cpp
     ${CMAKE_SOURCE_DIR}/test/TestSphere.cpp
+    ${CMAKE_SOURCE_DIR}/test/TestHit.cpp
+    ${CMAKE_SOURCE_DIR}/test/TestTransformRaySphere.cpp
 )
 
 set (TARGET_NAME unit_tests)

@@ -82,5 +82,7 @@ namespace raytracer_challenge
             return xt::linalg::det(mat) != 0;
         }
 
+        Ray transformRay(const Ray &ray, xarray<double> tf_mat);
+
     } // namespace tf
 } // namespace raytracer_challenge

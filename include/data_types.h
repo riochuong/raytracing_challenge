@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <xtensor/xarray.hpp>
 #include <xtensor-blas/xlinalg.hpp>
+#include <math.h>
 #include "color.h"
 
 using namespace std;
@@ -19,8 +20,8 @@ namespace raytracer_challenge {
              * @return  xarray type 
              */ 
 
-            virtual xarray<double> get_mat_data() = 0;
-            virtual xarray<double> get_mat_homo_data() = 0;
+            virtual xarray<double> get_mat_data() const = 0;
+            virtual xarray<double> get_mat_homo_data() const = 0;
             virtual void apply_transform(xarray<double> tmat) = 0;
     };
 
@@ -58,7 +59,7 @@ namespace raytracer_challenge {
                 return *this;
             }
 
-            virtual xarray<double> get_mat_data() {
+            virtual xarray<double> get_mat_data() const {
                 xarray<double> mat_data = {
                     // point is movable so this should be 1
                     {x, y, z} 
@@ -67,7 +68,7 @@ namespace raytracer_challenge {
                 return mat_data;
             }
 
-            virtual xarray<double> get_mat_homo_data() {
+            virtual xarray<double> get_mat_homo_data() const {
                 xarray<double> mat_data = {
                     // point is movable so this should be 1
                     {x, y, z, 1} 
@@ -92,6 +93,7 @@ namespace raytracer_challenge {
 
             }
             friend ostream& operator<<(ostream& os, const Point& p);
+            friend bool operator==(const Point &lhs, const Point &rhs);
             
         
     };
@@ -128,7 +130,7 @@ namespace raytracer_challenge {
                 return *this;
             }
 
-            virtual xarray<double> get_mat_data() {
+            virtual xarray<double> get_mat_data() const {
                 xarray<double> mat_data = {
                     // point is movable so this should be 1
                     {x, y, z} 
@@ -137,7 +139,7 @@ namespace raytracer_challenge {
                 return mat_data;
             }
 
-            virtual xarray<double> get_mat_homo_data() {
+            virtual xarray<double> get_mat_homo_data() const {
                 xarray<double> mat_data = {
                     // point is movable so this should be 1
                     {x, y, z, 0} 
@@ -154,13 +156,14 @@ namespace raytracer_challenge {
                 if (shape[0] != 4 && shape[1] != 4){
                     throw runtime_error("Trans.Matrix requires shape 4x4");
                 }
-                auto result = linalg::dot(tmat, get_mat_data());
+                auto result = linalg::dot(tmat, get_mat_homo_data());
                 x = result[{0,0}];
                 y = result[{1,0}];
                 z = result[{2,0}];
 
             }
             friend ostream& operator<<(ostream& os, const Vect& p);
+            friend bool operator==(const Vect &lhs, const Vect &rhs);
         
     };
 
@@ -179,10 +182,7 @@ namespace raytracer_challenge {
              *  @param double: z position
              *  @return  xarray: translation matrix
             */
-            Ray(Point pt, Vect dir){
-                this->point = pt;
-                this->vect = dir;
-            }
+            Ray(const Point &pt, const Vect &dir): point(pt), vect(dir) {};
 
             Ray (const Ray &rhs){
                 this->point = rhs.point;
@@ -203,7 +203,7 @@ namespace raytracer_challenge {
             double radius;
             Point origin;
 
-            Sphere(): radius(1), origin(0,0,0) {};
+            Sphere(): radius(1), origin(0,0,0), tf_mat_(xt::eye(4)) {};
             Sphere(double r, Point &p): radius(r), origin(p) {
                 if (r <= 0){
                     throw runtime_error("Radius need to be a positive number");
@@ -214,6 +214,33 @@ namespace raytracer_challenge {
                 this->origin = rhs.origin;
             }
             friend ostream& operator<<(ostream& os, const Sphere& r);
+            friend bool operator==(const Sphere &lhs, const Sphere &rhs);
+
+
+            void setTransform(const xarray<double> &tf) {
+                auto shape = tf_mat_.shape();
+                if (shape.size() != 2) {
+                    throw runtime_error("Trans.Matrix requires to be 2 dimensional !");
+                }
+                if (shape[0] != 4 && shape[1] != 4){
+                    throw runtime_error("Trans.Matrix requires shape 4x4");
+                }
+                tf_mat_ = tf;
+            }
+
+            xarray<double> getTransform() {
+                return tf_mat_;
+            }
+
+        private:
+            xarray<double> tf_mat_;
     };
 
+    class Intersection {
+        public:
+            double t;
+            Sphere object;
+            Intersection(double tval, Sphere s): t(tval), object(s) {};
+
+    };
 }

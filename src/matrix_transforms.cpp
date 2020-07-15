@@ -73,4 +73,16 @@ xarray<double> tf::shearing(double x_y,
     return tmat;
 }
 
+Ray tf::transformRay(const Ray &ray, xarray<double> tf_mat) {
+    if (tf_mat.shape().size() != 2 || 
+        tf_mat.shape()[0] != 4 || 
+        tf_mat.shape()[1] != 4) {
+        throw runtime_error("transform matrix need to be 4x4");
+    }
+    Point p(ray.point);
+    p.apply_transform(tf_mat);
+    Vect v(ray.vect);
+    v.apply_transform(tf_mat);
+    return Ray(p, v);
+}
 

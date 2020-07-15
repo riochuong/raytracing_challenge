@@ -26,6 +26,14 @@ namespace raytracer_challenge {
          *  @param Sphere : s sphere 
          *  @return  vector: intersect distances from ray origin (can be negatives)
         */
-        vector<double> intersect(Sphere s, Ray r);
+        vector<Intersection> intersect(Sphere s, Ray r);
+
+
+         /**
+         *  @brief  find intersection that is visible and infront of ray origin
+         *  @param vector<Intersection>: list of intersections
+         *  @return  int32_t index: index of the hit or -1 if no hit found
+        */
+        int32_t hit(const vector<Intersection> &intersections);
     }
 }
