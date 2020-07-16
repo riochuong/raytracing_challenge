@@ -27,6 +27,86 @@ namespace raytracer_challenge {
 
 
 
+    
+
+    class Vect: XarrayBaseType {
+        public:
+            double x;
+            double y;
+            double z;
+
+            Vect(): x(0), y(0), z(0){};
+
+            /**
+             *  @brief  create ray 
+             *  @param double: x position
+             *  @param double : y position
+             *  @param double: z position
+             *  @return  xarray: translation matrix
+            */
+            Vect(double x_, double y_, double z_): x(x_), y(y_), z(z_){
+
+            };
+
+            Vect(const Vect &rhs) {
+                this->x = rhs.x;
+                this->y = rhs.y;
+                this->z = rhs.z;
+            }
+
+            Vect& operator=(const Vect &rhs) {
+                this->x = rhs.x;
+                this->y = rhs.y;
+                this->z = rhs.z;
+                return *this;
+            }
+
+            virtual xarray<double> get_mat_data() const {
+                xarray<double> mat_data = {
+                    // point is movable so this should be 1
+                    {x, y, z} 
+                };
+                mat_data.reshape({3, 1});
+                return mat_data;
+            }
+
+            virtual xarray<double> get_mat_homo_data() const {
+                xarray<double> mat_data = {
+                    // point is movable so this should be 1
+                    {x, y, z, 0} 
+                };
+                mat_data.reshape({4, 1});
+                return mat_data;
+            }
+
+            Vect normalize() const {
+                double magnitude = sqrt(x*x + y*y + z*z);
+                return Vect(
+                    x/magnitude,
+                    y/magnitude,
+                    z/magnitude
+                );
+            }
+
+            virtual void apply_transform(xarray<double> tmat) {
+                auto shape = tmat.shape();
+                if (shape.size() != 2) {
+                    throw runtime_error("Trans.Matrix requires to be 2 dimensional !");
+                }
+                if (shape[0] != 4 && shape[1] != 4){
+                    throw runtime_error("Trans.Matrix requires shape 4x4");
+                }
+                auto result = linalg::dot(tmat, get_mat_homo_data());
+                x = result[{0,0}];
+                y = result[{1,0}];
+                z = result[{2,0}];
+
+            }
+            friend ostream& operator<<(ostream& os, const Vect& p);
+            friend bool operator==(const Vect &lhs, const Vect &rhs);
+        
+    };
+
     class Point: public XarrayBaseType {
         public:
             double x;
@@ -52,11 +132,18 @@ namespace raytracer_challenge {
                 this->z = rhs.z;
             }
 
-            Point& operator=(const Point &rhs) {
+            Point operator=(const Point &rhs) {
                 this->x = rhs.x;
                 this->y = rhs.y;
                 this->z = rhs.z;
                 return *this;
+            }
+
+            Vect operator-(const Point &rhs) {
+                Vect p (this->x - rhs.x,
+                         this->y - rhs.y,
+                         this->z - rhs.z);
+                return p;
             }
 
             virtual xarray<double> get_mat_data() const {
@@ -95,75 +182,6 @@ namespace raytracer_challenge {
             friend ostream& operator<<(ostream& os, const Point& p);
             friend bool operator==(const Point &lhs, const Point &rhs);
             
-        
-    };
-
-    class Vect: XarrayBaseType {
-        public:
-            double x;
-            double y;
-            double z;
-
-            Vect(): x(0), y(0), z(0){};
-
-            /**
-             *  @brief  create ray 
-             *  @param double: x position
-             *  @param double : y position
-             *  @param double: z position
-             *  @return  xarray: translation matrix
-            */
-            Vect(double x_, double y_, double z_): x(x_), y(y_), z(z_){
-
-            };
-
-            Vect(const Vect &rhs) {
-                this->x = rhs.x;
-                this->y = rhs.y;
-                this->z = rhs.z;
-            }
-
-            Vect& operator=(const Point &rhs) {
-                this->x = rhs.x;
-                this->y = rhs.y;
-                this->z = rhs.z;
-                return *this;
-            }
-
-            virtual xarray<double> get_mat_data() const {
-                xarray<double> mat_data = {
-                    // point is movable so this should be 1
-                    {x, y, z} 
-                };
-                mat_data.reshape({3, 1});
-                return mat_data;
-            }
-
-            virtual xarray<double> get_mat_homo_data() const {
-                xarray<double> mat_data = {
-                    // point is movable so this should be 1
-                    {x, y, z, 0} 
-                };
-                mat_data.reshape({4, 1});
-                return mat_data;
-            }
-
-            virtual void apply_transform(xarray<double> tmat) {
-                auto shape = tmat.shape();
-                if (shape.size() != 2) {
-                    throw runtime_error("Trans.Matrix requires to be 2 dimensional !");
-                }
-                if (shape[0] != 4 && shape[1] != 4){
-                    throw runtime_error("Trans.Matrix requires shape 4x4");
-                }
-                auto result = linalg::dot(tmat, get_mat_homo_data());
-                x = result[{0,0}];
-                y = result[{1,0}];
-                z = result[{2,0}];
-
-            }
-            friend ostream& operator<<(ostream& os, const Vect& p);
-            friend bool operator==(const Vect &lhs, const Vect &rhs);
         
     };
 
