@@ -47,4 +47,17 @@ namespace raytracer_challenge {
         }
         return false;
     }
+
+    Vect Sphere::getNormalAt(const Point &world_point) {
+        // convert world point to object space
+        Point object_point(world_point);
+        std::cout << "Spehere tf:\n" << this->getTransform() << "\n";
+        auto inv_transform = linalg::inv(this->getTransform());
+        object_point.apply_transform(inv_transform);
+        Vect world_normal = object_point - this->origin;
+        world_normal.apply_transform(xt::transpose(inv_transform));
+        // fix w for vector to avoid crazy things 
+        return world_normal.normalize();
+    }
+
 }

@@ -22,6 +22,8 @@ set (UNIT_TEST_FILES
     ${CMAKE_SOURCE_DIR}/test/TestSphere.cpp
     ${CMAKE_SOURCE_DIR}/test/TestHit.cpp
     ${CMAKE_SOURCE_DIR}/test/TestTransformRaySphere.cpp
+    ${CMAKE_SOURCE_DIR}/test/TestSurfaceNormal.cpp
+    ${CMAKE_SOURCE_DIR}/test/TestLightningAndShading.cpp
 )
 
 set (TARGET_NAME unit_tests)

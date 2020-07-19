@@ -15,9 +15,9 @@ typedef xt::numeric_constants<double> numeric;
 TEST_CASE("Vector normalize"){
     Vect v (1, 2, 3);
     Vect norm = v.normalize();
-    xt::isclose(norm.x, 0.26726);
-    xt::isclose(norm.y, 0.53452);
-    xt::isclose(norm.z, 0.80178);
+    REQUIRE(xt::isclose(norm.x, 0.26726)());
+    REQUIRE(xt::isclose(norm.y, 0.53452)());
+    REQUIRE(xt::isclose(norm.z, 0.80178)());
 }
 
 TEST_CASE("Multiply Matrices") {
