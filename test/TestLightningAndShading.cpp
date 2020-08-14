@@ -78,3 +78,15 @@ TEST_CASE("Light source behind surfaces ") {
     REQUIRE(xt::isclose(result.G, 0.1)());
     REQUIRE(xt::isclose(result.B, 0.1)());
 }
+
+TEST_CASE("World Ray Intersection") {
+    World default_world = World::createDefaultWorld();
+    Ray ray (Point(0, 0, -5), Vect(0, 0, 1));
+    vector<Intersection> intersections = intersectWorld(ray, default_world);
+    vector<double> expected_ts = {4, 4.5, 5.5, 6};
+    REQUIRE(intersections.size() == expected_ts.size());
+    for (int i =0; i < expected_ts.size(); i++){
+        std::cout << "result " << intersections[i].t << "\n expected: " <<  expected_ts[i] << "\n";
+        REQUIRE(xt::isclose(intersections[i].t, expected_ts[i])());
+    }
+}

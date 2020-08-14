@@ -10,10 +10,10 @@
 
 using namespace std;
 using namespace xt;
+using namespace raytracer_challenge;
 
 namespace raytracer_challenge
 {
-
     class XarrayBaseType
     {
     public:
@@ -263,6 +263,15 @@ namespace raytracer_challenge
                                                              specular(sp),
                                                              shininess(sh){};
 
+
+        Material (const Material &m)
+        {
+            this->ambient = m.ambient;
+            this->diffuse = m.diffuse;
+            this->specular = m.specular;
+            this->shininess = m.shininess;
+        }
+        
         Material &operator=(const Material &m)
         {
             this->ambient = m.ambient;
@@ -288,10 +297,21 @@ namespace raytracer_challenge
                 throw runtime_error("Radius need to be a positive number");
             }
         };
-        Sphere &operator=(Sphere &rhs)
+
+        Sphere(const Sphere &rhs)
         {
             this->radius = rhs.radius;
             this->origin = rhs.origin;
+            this->material = rhs.material;
+            this->tf_mat_ = rhs.tf_mat_;
+        }
+
+        Sphere &operator=(const Sphere &rhs)
+        {
+            this->radius = rhs.radius;
+            this->origin = rhs.origin;
+            this->material = rhs.material;
+            this->tf_mat_ = rhs.tf_mat_;
             return *this;
         }
         friend ostream &operator<<(ostream &os, const Sphere &r);
@@ -311,8 +331,10 @@ namespace raytracer_challenge
             tf_mat_ = tf;
         }
 
-        xarray<double> getTransform()
+        xarray<double> getTransform() const
         {
+            // return a copy of tf matrix
+            std::cout << "Tf mat: " << tf_mat_ << "\n";
             return tf_mat_;
         }
 
@@ -334,6 +356,19 @@ namespace raytracer_challenge
         Sphere object;
         Intersection() = delete;
         Intersection(double tval, Sphere s) : t(tval), object(s){};
+            Intersection(Intersection &&other) {
+                t = other.t;
+                object = other.object;
+            }
+        Intersection(const Intersection &other) {
+            t = other.t;
+            object = other.object;
+        }
+        Intersection &operator=(const Intersection &other) {
+            t = other.t;
+            object = other.object;
+            return *this;
+        }
     };
 
     class PointLight
@@ -342,7 +377,29 @@ namespace raytracer_challenge
         Point position;
         Color intensity;
         PointLight() = delete;
+        
         PointLight(const Point &p, const Color &c) : position(p), intensity(c){};
+        
+        PointLight(const PointLight &rhs): position(rhs.position), intensity(rhs.intensity) {};
+        
+        PointLight &operator=(const PointLight &rhs) {
+            position = rhs.position;
+            intensity = rhs.intensity;
+            return *this;
+        }
+    };
+
+    class World {
+        public:
+            PointLight light;
+
+            World(const PointLight &pl): light(pl) {};
+
+            static World createDefaultWorld();
+
+            // check if a given sphere belongs to the world 
+            bool contains(const Sphere &s);
+            vector<Sphere> sphere_containers;
     };
 
 } // namespace raytracer_challenge

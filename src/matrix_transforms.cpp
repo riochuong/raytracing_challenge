@@ -83,6 +83,6 @@ Ray tf::transformRay(const Ray &ray, xarray<double> tf_mat) {
     p.apply_transform(tf_mat);
     Vect v(ray.vect);
     v.apply_transform(tf_mat);
-    return Ray(p, v.normalize());
+    return Ray(p, v);
 }
 

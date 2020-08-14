@@ -26,7 +26,7 @@ namespace raytracer_challenge {
          *  @param Sphere : s sphere 
          *  @return  vector: intersect distances from ray origin (can be negatives)
         */
-        vector<Intersection> intersect(Sphere s, Ray r);
+        vector<Intersection> intersect(const Sphere &s, const Ray &r);
 
 
          /**
@@ -59,5 +59,13 @@ namespace raytracer_challenge {
          *  @return  Color color: color 
         */
         Vect reflect(const Vect &in, const Vect &norm);
+
+         /**
+         *  @brief  Find reflect vector 
+         *  @param Vect: input light vector
+         *  @param Vect vector normal of surface
+         *  @return  Color color: color 
+        */
+        vector<Intersection> intersectWorld(const Ray & ray, const World &world);
     }
 }

@@ -38,17 +38,17 @@ int main (int argc, char** argv){
             Point pos (worldX[x], worldY[y], wallZ);
             Vect vect = pos - rayOrigin;
             auto sphereTransform = tf::scaling(1, 1, 1);
-            auto rayTf = tf::transformRay(Ray(rayOrigin, vect.normalize()), 
+            auto tf_ray = tf::transformRay(Ray(rayOrigin, vect.normalize()), 
                                           xt::linalg::inv(sphereTransform));
             
-            auto intersects = intersect(s, rayTf);
+            auto intersects = intersect(s, tf_ray);
             auto hit_idx = hit(intersects);
             if (hit_idx >= 0) {
                 
                 auto hit_obj = intersects[hit_idx];
-                auto hit_point = position(rayTf, hit_obj.t);
+                auto hit_point = position(tf_ray, hit_obj.t);
                 auto normal_at_hit_point = hit_obj.object.getNormalAt(hit_point);
-                auto eye_vect = rayTf.vect * (-1);
+                auto eye_vect = tf_ray.vect * (-1);
                 auto color = lighting(hit_obj.object.material, 
                                       light, hit_point, 
                                       eye_vect, 

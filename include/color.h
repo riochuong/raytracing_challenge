@@ -8,17 +8,13 @@ namespace raytracer_challenge {
             float G;
             float B;
 
-        Color(float r, float g, float b): R(r), G(g), B(b) {};
+        constexpr Color(float r, float g, float b): R(r), G(g), B(b) {};
 
-        Color(): R(0), G(0), B(0) {};
+        constexpr Color(): R(0), G(0), B(0) {};
 
-        Color(const Color &rhs) {
-            R = rhs.R;
-            B = rhs.B;
-            G = rhs.G;
-        }
+        constexpr Color(const Color &rhs): R(rhs.R),  G(rhs.G), B(rhs.B) {}
 
-        Color operator+(const Color &rhs) const {
+        constexpr Color operator+(const Color &rhs) const {
             Color new_color;
             new_color.R = this->R + rhs.R;
             new_color.G = this->G + rhs.G;
@@ -26,7 +22,7 @@ namespace raytracer_challenge {
             return new_color;
         }
 
-        Color operator-(const Color &rhs) const {
+        constexpr Color operator-(const Color &rhs) const {
             Color new_color;
             new_color.R = this->R - rhs.R;
             new_color.G = this->G - rhs.G;
@@ -34,7 +30,7 @@ namespace raytracer_challenge {
             return new_color;
         }
 
-        Color operator*(const Color &rhs) const {
+        constexpr Color operator*(const Color &rhs) const {
             Color new_color;
             new_color.R = this->R * rhs.R;
             new_color.G = this->G * rhs.G;
@@ -42,7 +38,7 @@ namespace raytracer_challenge {
             return new_color;
         }
 
-        Color operator*(float scalar) const {
+        constexpr Color operator*(float scalar) const {
             Color new_color;
             new_color.R = this->R * scalar;
             new_color.G = this->G * scalar;
@@ -50,7 +46,7 @@ namespace raytracer_challenge {
             return new_color;
         }
 
-        Color &operator=(const Color &rhs) {
+        constexpr Color &operator=(const Color &rhs) {
             this->R = rhs.R;
             this->G = rhs.G;
             this->B = rhs.B;

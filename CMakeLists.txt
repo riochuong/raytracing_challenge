@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.14.3)
 set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 set(CMAKE_C_COMPILER "/usr/bin/gcc")
 set(CMAKE_REQUIRED_INCLUDES ${CMAKE_SOURCE_DIR}/include)
+set(CMAKE_BUILD_TYPE Debug)
 
 project(RayTracerChallenge)
 

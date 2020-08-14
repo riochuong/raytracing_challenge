@@ -21,7 +21,7 @@ namespace raytracer_challenge
             return Point(result[{0, 0}], result[{1, 0}], result[{2, 0}]);
         }
 
-        vector<Intersection> intersect(Sphere s, Ray r)
+        vector<Intersection> intersect(const Sphere &s, const Ray &r)
         {
             vector<Intersection> dists;
             
@@ -121,6 +121,21 @@ namespace raytracer_challenge
             return ambient + specular + diffuse;
 
         }
+
+         vector<Intersection> intersectWorld(const Ray & ray, const World &world) {
+               vector<Intersection> ints;
+               for (const Sphere &s: world.sphere_containers) {
+                   for (const Intersection &i: intersect(s, ray)) {
+                       ints.push_back(i);
+                   }
+               }
+               // need to sort the list based on t value 
+               sort(ints.begin(), 
+                    ints.end(), 
+                    [](Intersection &a, Intersection &b) {return a.t < b.t;}
+               );
+               return ints;
+         }
 
         
     } // namespace raytracing_helpers
